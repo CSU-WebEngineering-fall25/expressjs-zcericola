@@ -1,0 +1,569 @@
+<!-- public/index.html - API Documentation -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comic API Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .intro h2 {
+            margin-top: 0;
+            color: white;
+        }
+
+        .endpoint {
+            margin: 30px 0;
+            padding: 25px;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            background: #fafbfc;
+        }
+
+        .endpoint h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .method {
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .get {
+            background-color: #28a745;
+        }
+
+        .post {
+            background-color: #007bff;
+        }
+
+        .put {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .delete {
+            background-color: #dc3545;
+        }
+
+        .url {
+            font-family: 'Monaco', 'Consolas', 'SF Mono', monospace;
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 1.1em;
+        }
+
+        .params {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-left: 4px solid #3498db;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Consolas', 'SF Mono', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.4;
+        }
+
+        .status-codes {
+            margin-top: 15px;
+        }
+
+        .status-code {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 3px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-family: monospace;
+            font-weight: 500;
+        }
+
+        .status-200 {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-201 {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-400 {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-404 {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-429 {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-500 {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .feature-card h4 {
+            color: #495057;
+            margin-top: 0;
+        }
+
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #e83e8c;
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: #495057;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="intro">
+            <h2>🚀 Comic API Documentation</h2>
+            <p>A RESTful API for fetching XKCD comics with search capabilities, caching, and usage statistics. Built
+                with Express.js and designed for high performance and reliability.</p>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#quick-start">Quick Start</a></li>
+                <li><a href="#endpoints">API Endpoints</a></li>
+                <li><a href="#rate-limiting">Rate Limiting</a></li>
+                <li><a href="#error-handling">Error Handling</a></li>
+                <li><a href="#examples">Usage Examples</a></li>
+            </ul>
+        </div>
+
+        <h2 id="quick-start">Quick Start</h2>
+        <p>Base URL: <code>http://localhost:3000/api</code></p>
+        <p>All responses are in JSON format. The API is stateless and requires no authentication.</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>🎯 Simple & Fast</h4>
+                <p>Clean RESTful design with predictable URLs and standard HTTP methods.</p>
+            </div>
+            <div class="feature-card">
+                <h4>📊 Built-in Analytics</h4>
+                <p>Track API usage with detailed statistics and performance metrics.</p>
+            </div>
+            <div class="feature-card">
+                <h4>🔍 Powerful Search</h4>
+                <p>Search comics by title and content with pagination support.</p>
+            </div>
+            <div class="feature-card">
+                <h4>⚡ Cached Responses</h4>
+                <p>Intelligent caching for improved performance and reduced load times.</p>
+            </div>
+        </div>
+
+        <h2 id="endpoints">API Endpoints</h2>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> <span class="url">/api/health</span></h3>
+            <p>Health check endpoint to verify API status and get basic server information.</p>
+
+            <div class="example">
+                {
+                "status": "healthy",
+                "timestamp": "2023-10-01T12:00:00.000Z",
+                "uptime": 3600.5
+                }</div>
+
+            <div class="status-codes">
+                <strong>Status Codes:</strong>
+                <span class="status-code status-200">200 OK</span>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> <span class="url">/api/comics/latest</span></h3>
+            <p>Retrieve the most recent XKCD comic. Results are cached for 5 minutes to improve performance.</p>
+
+            <div class="example">
+                {
+                "id": 2750,
+                "title": "Physics Confession",
+                "img": "https://imgs.xkcd.com/comics/physics_confession.png",
+                "alt": "I've been waiting 14 years for someone to ask me about Newton's laws of motion so I could bring
+                up that they don't apply to corn dogs.",
+                "transcript": "",
+                "year": "2023",
+                "month": "3",
+                "day": "15",
+                "safe_title": "Physics Confession"
+                }</div>
+
+            <div class="status-codes">
+                <strong>Status Codes:</strong>
+                <span class="status-code status-200">200 OK</span>
+                <span class="status-code status-500">500 Internal Server Error</span>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> <span class="url">/api/comics/:id</span></h3>
+            <p>Retrieve a specific comic by its ID number. Comic IDs start from 1 and increment sequentially.</p>
+
+            <div class="params">
+                <strong>Path Parameters:</strong><br>
+                <code>id</code> - Comic ID (positive integer, required)
+            </div>
+
+            <div class="example">
+                GET /api/comics/614
+
+                {
+                "id": 614,
+                "title": "Woodpecker",
+                "img": "https://imgs.xkcd.com/comics/woodpecker.png",
+                "alt": "If you want to build a ship, don't drum up the men to gather wood, divide the work and give
+                orders. Instead, teach them to yearn for the vast and endless sea.",
+                "transcript": "",
+                "year": "2009",
+                "month": "10",
+                "day": "7",
+                "safe_title": "Woodpecker"
+                }</div>
+
+            <div class="status-codes">
+                <strong>Status Codes:</strong>
+                <span class="status-code status-200">200 OK</span>
+                <span class="status-code status-400">400 Bad Request</span>
+                <span class="status-code status-404">404 Not Found</span>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> <span class="url">/api/comics/random</span></h3>
+            <p>Retrieve a random XKCD comic. Each request returns a different comic selected randomly from the available
+                collection.</p>
+
+            <div class="example">
+                {
+                "id": 1337,
+                "title": "Hack",
+                "img": "https://imgs.xkcd.com/comics/hack.png",
+                "alt": "I'm not saying it was aliens, but it was aliens.",
+                "transcript": "",
+                "year": "2014",
+                "month": "2",
+                "day": "14",
+                "safe_title": "Hack"
+                }</div>
+
+            <div class="status-codes">
+                <strong>Status Codes:</strong>
+                <span class="status-code status-200">200 OK</span>
+                <span class="status-code status-500">500 Internal Server Error</span>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> <span class="url">/api/comics/search</span></h3>
+            <p>Search comics by title or transcript content with pagination support. Results are ranked by relevance.
+            </p>
+
+            <div class="params">
+                <strong>Query Parameters:</strong><br>
+                <code>q</code> - Search query (required, 1-100 characters)<br>
+                <code>page</code> - Page number (optional, default: 1, min: 1)<br>
+                <code>limit</code> - Results per page (optional, default: 10, max: 50)
+            </div>
+
+            <div class="example">
+                GET /api/comics/search?q=python&page=1&limit=5
+
+                {
+                "query": "python",
+                "results": [
+                {
+                "id": 353,
+                "title": "Python",
+                "img": "https://imgs.xkcd.com/comics/python.png",
+                "alt": "I wrote 20 short programs in Python yesterday. It was wonderful.",
+                "transcript": "",
+                "year": "2007",
+                "month": "12",
+                "day": "5",
+                "safe_title": "Python"
+                }
+                ],
+                "total": 3,
+                "pagination": {
+                "page": 1,
+                "limit": 5,
+                "offset": 0
+                }
+                }</div>
+
+            <div class="status-codes">
+                <strong>Status Codes:</strong>
+                <span class="status-code status-200">200 OK</span>
+                <span class="status-code status-400">400 Bad Request</span>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> <span class="url">/api/stats</span></h3>
+            <p>Retrieve detailed API usage statistics including request counts, endpoint usage, and server uptime.</p>
+
+            <div class="example">
+                {
+                "totalRequests": 1247,
+                "endpointStats": {
+                "GET /api/comics/latest": 423,
+                "GET /api/comics/random": 301,
+                "GET /api/comics/search": 198,
+                "GET /api/comics/:id": 287,
+                "GET /api/health": 38
+                },
+                "uptime": 7200.5
+                }</div>
+
+            <div class="status-codes">
+                <strong>Status Codes:</strong>
+                <span class="status-code status-200">200 OK</span>
+            </div>
+        </div>
+
+        <h2 id="rate-limiting">Rate Limiting</h2>
+        <div class="alert alert-warning">
+            <strong>Rate Limits:</strong> API requests are limited to <strong>100 requests per 15 minutes</strong> per
+            IP address to ensure fair usage and system stability.
+        </div>
+
+        <p>When the rate limit is exceeded, you'll receive a <span class="status-code status-429">429 Too Many
+                Requests</span> response with a <code>Retry-After</code> header indicating when you can make requests
+            again.</p>
+
+        <div class="example">
+            {
+            "error": "Too many requests from this IP",
+            "retryAfter": 300
+            }</div>
+
+        <h2 id="error-handling">Error Handling</h2>
+        <p>All errors return JSON responses with consistent structure and appropriate HTTP status codes:</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>400 Bad Request</h4>
+                <p>Invalid parameters, malformed requests, or validation errors.</p>
+                <code>{"error": "Comic ID must be a positive integer"}</code>
+            </div>
+            <div class="feature-card">
+                <h4>404 Not Found</h4>
+                <p>Requested resource doesn't exist or endpoint not found.</p>
+                <code>{"error": "Comic not found"}</code>
+            </div>
+            <div class="feature-card">
+                <h4>429 Too Many Requests</h4>
+                <p>Rate limit exceeded, includes retry-after information.</p>
+                <code>{"error": "Too many requests", "retryAfter": 300}</code>
+            </div>
+            <div class="feature-card">
+                <h4>500 Internal Server Error</h4>
+                <p>Server-side errors, external API failures.</p>
+                <code>{"error": "Internal Server Error"}</code>
+            </div>
+        </div>
+
+        <h2 id="examples">Usage Examples</h2>
+
+        <h3>JavaScript/Node.js</h3>
+        <div class="example">
+            // Fetch latest comic
+            const response = await fetch('http://localhost:3000/api/comics/latest');
+            const comic = await response.json();
+            console.log(comic.title);
+
+            // Search for comics
+            const searchResponse = await fetch(
+            'http://localhost:3000/api/comics/search?q=programming&limit=5'
+            );
+            const searchResults = await searchResponse.json();
+            console.log(`Found ${searchResults.total} comics about programming`);
+        </div>
+
+        <h3>Python</h3>
+        <div class="example">
+            import requests
+
+            # Get a random comic
+            response = requests.get('http://localhost:3000/api/comics/random')
+            comic = response.json()
+            print(f"Random comic: {comic['title']}")
+
+            # Get API statistics
+            stats = requests.get('http://localhost:3000/api/stats').json()
+            print(f"Total API requests: {stats['totalRequests']}")
+        </div>
+
+        <h3>curl</h3>
+        <div class="example">
+            # Get latest comic
+            curl -X GET "http://localhost:3000/api/comics/latest"
+
+            # Search with pagination
+            curl -X GET "http://localhost:3000/api/comics/search?q=science&page=2&limit=10"
+
+            # Get specific comic
+            curl -X GET "http://localhost:3000/api/comics/614"
+        </div>
+
+        <div class="alert alert-info">
+            <strong>Development Note:</strong> This API is designed for educational purposes and uses the public XKCD
+            API as its data source. Please be respectful of both this service and the original XKCD API when making
+            requests.
+        </div>
+
+        <h2>Response Schema</h2>
+        <p>All comic objects follow this consistent structure:</p>
+
+        <div class="example">
+            {
+            "id": number, // Unique comic identifier
+            "title": string, // Comic title
+            "img": string, // Image URL (PNG/JPG)
+            "alt": string, // Alt text / hover text
+            "transcript": string, // Transcript (may be empty)
+            "year": string, // Publication year
+            "month": string, // Publication month
+            "day": string, // Publication day
+            "safe_title": string // URL-safe title
+            }
+        </div>
+
+        <footer>
+            <p><strong>Comic API v1.0</strong></p>
+            <p>Built with Express.js and Node.js • Data provided by <a href="https://xkcd.com" target="_blank">XKCD</a>
+            </p>
+            <p>For support or questions about this API, please refer to the project documentation.</p>
+        </footer>
+    </div>
+</body>
+
+</html>
