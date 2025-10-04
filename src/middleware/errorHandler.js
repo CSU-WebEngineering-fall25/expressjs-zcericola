@@ -2,7 +2,6 @@ const { error } = require( 'winston' );
 
 // TODO: Complete the error handling middleware
 module.exports = (err, req, res, next) => {
-  console.log('error coming through: ', err);
   // Log the error with details:
   // - message, stack, url, method, requestId (if available)
   const errorDetails = {

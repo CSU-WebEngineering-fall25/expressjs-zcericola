@@ -23,13 +23,6 @@ app.use(helmet());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(cors());
-// app.options('*', (req, res) => {
-//   res.set({
-//     'Access-Control-Allow-Origin': [process.env.ALLOWED_ORIGINS],
-//     'Access-Control-Allow-Headers': 'Content-Type',
-//     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
-//   })
-// })
 
 // Rate limiting
 const limiter = rateLimit({

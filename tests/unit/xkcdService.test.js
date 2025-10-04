@@ -131,7 +131,6 @@ describe('XKCDService Unit Tests', () => {
         json: async () => mockComic
       });
       const comicResult = await XKCDService.getById(1);
-      console.log('comicResult: ', comicResult);
       expect(comicResult.id).toEqual(mockComic.num);
       expect(comicResult.title).toEqual(mockComic.title);
       expect(mockFetch).toHaveBeenCalledTimes(1);
@@ -171,7 +170,6 @@ describe('XKCDService Unit Tests', () => {
       const getByIdSpy = jest.spyOn(XKCDService, 'getById').mockImplementationOnce(() => mockRandomComic);
 
       comicResult = await XKCDService.getRandom();
-      console.log('comicResult: ', comicResult);
       expect(latestSpy).toHaveBeenCalledTimes(1);
       expect(getByIdSpy).toHaveBeenCalledTimes(1);
       expect(comicResult.title).toEqual(mockRandomComic.title);
