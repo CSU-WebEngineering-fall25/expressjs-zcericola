@@ -108,9 +108,33 @@ describe('XKCDService Unit Tests', () => {
   });
 
   describe('getById', () => {
+    // test('should fetch comic by ID when implemented', async () => {
+    //   await expect(XKCDService.getById(614)).rejects.toThrow('getById method not implemented');
+    // });
+
+    // added this test myself - Zac
     test('should fetch comic by ID when implemented', async () => {
-      await expect(XKCDService.getById(614)).rejects.toThrow('getById method not implemented');
-    });
+      const mockComic = {
+        num: 1,
+        title: 'Zac Test Comic',
+        img: 'https://imgs.xkcd.com/comics/test.png',
+        alt: 'Test alt text',
+        transcript: 'Test transcript',
+        year: '2023',
+        month: '4',
+        day: '1',
+        safe_title: 'Zac Test Comic'
+      };
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockComic
+      });
+      const comicResult = await XKCDService.getById(1);
+      expect(comicResult.id).toEqual(mockComic.num);
+      expect(comicResult.title).toEqual(mockComic.title);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    })
 
     test('should validate ID parameter when implemented', async () => {
       await expect(XKCDService.getById(0)).rejects.toThrow();
@@ -120,14 +144,48 @@ describe('XKCDService Unit Tests', () => {
   });
 
   describe('getRandom', () => {
-    test('should return random comic when implemented', async () => {
-      await expect(XKCDService.getRandom()).rejects.toThrow('getRandom method not implemented');
-    });
+    // test('should return random comic when implemented', async () => {
+    //   await expect(XKCDService.getRandom()).rejects.toThrow('getRandom method not implemented');
+    // });
+    test('should return random comic', async () => {
+      const mockLatestComic = {
+        id: 5,
+        title: 'Zac Comic',
+        img: 'https://imgs.xkcd.com/comics/test.png',
+        alt: 'Test alt text',
+        transcript: 'Test transcript',
+        year: '2023',
+        month: '4',
+        day: '1',
+        safe_title: 'Zac Comic'
+      };
+
+      const mockRandomComic = {
+        ...mockLatestComic,
+        id: 4,
+        title: 'Zac Random Comic'
+      };
+
+      const latestSpy = jest.spyOn(XKCDService, 'getLatest').mockImplementationOnce(() => mockLatestComic);
+      const getByIdSpy = jest.spyOn(XKCDService, 'getById').mockImplementationOnce(() => mockRandomComic);
+
+      comicResult = await XKCDService.getRandom();
+      expect(latestSpy).toHaveBeenCalledTimes(1);
+      expect(getByIdSpy).toHaveBeenCalledTimes(1);
+      expect(comicResult.title).toEqual(mockRandomComic.title);
+      expect(comicResult.id).toEqual(mockRandomComic.id);
+    })
   });
 
   describe('search', () => {
-    test('should search comics when implemented', async () => {
-      await expect(XKCDService.search('test')).rejects.toThrow('search method not implemented');
+    // test('should search comics when implemented', async () => {
+    //   await expect(XKCDService.search('test')).rejects.toThrow('search method not implemented');
+    // });
+
+    test('should throw error if query length is out of bounds', async () => {
+      const longQuery = 'fdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafdfdafdsafdafdafdsafdsafd';
+
+      await expect(XKCDService.search(longQuery)).rejects.toThrow('Query length must be between 1 and 100 characters (inclusive)');
     });
   });
 

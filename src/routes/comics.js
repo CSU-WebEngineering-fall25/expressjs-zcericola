@@ -24,33 +24,14 @@ router.get('/latest', async (req, res, next) => {
   }
 });
 
-// TODO: Implement GET /api/comics/:id
-router.get('/:id',
-  [
-    param('id')
-      .isInt({ min: 1 })
-      .withMessage('Comic ID must be a positive integer')
-  ],
-  validate,
-  async (req, res, next) => {
-    try {
-      // Get comic by ID using xkcdService.getById()
-      // Parse req.params.id to integer
-      // Pass any errors to next()
-      res.status(501).json({ error: 'Not implemented' });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
 // TODO: Implement GET /api/comics/random
 router.get('/random', async (req, res, next) => {
   try {
     // Use xkcdService.getRandom() to get a random comic
-    // Handle any errors appropriately
-    res.status(501).json({ error: 'Not implemented' });
+    const randomComic = await xkcdService.getRandom();
+    return res.status(200).json(randomComic);
   } catch (error) {
+    // Handle any errors appropriately
     next(error);
   }
 });
@@ -75,11 +56,45 @@ router.get('/search',
   async (req, res, next) => {
     try {
       // Extract q, page, limit from req.query
+      let { q, page, limit } = req.query;
       // Set defaults: page = 1, limit = 10
+      if (!page) page = 1;
+      if (!limit) limit = 10;
+      // convert from string to number
+      page = +page;
+      limit = +limit;
+      
       // Use xkcdService.search(q, page, limit)
+      const results = await xkcdService.search(q, page, limit);
       // Return the search results
-      res.status(501).json({ error: 'Not implemented' });
+      return res.status(200).json(results);
     } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// TODO: Implement GET /api/comics/:id
+// NOTE: moved this to the bottom because Express was matching
+// other endpoints and routing it to this one since :id is a variable
+// so everything else was matching. Putting it last allows the other 
+// endpoints to be properly routed.
+router.get('/:id',
+  [
+    param('id')
+      .isInt({ min: 1 })
+      .withMessage('Comic ID must be a positive integer')
+  ],
+  validate,
+  async (req, res, next) => {
+    try {
+      // Get comic by ID using xkcdService.getById()
+      // Parse req.params.id to integer
+      const id = parseInt(req.params.id);
+      const comic = await xkcdService.getById(id);
+      return res.status(200).json(comic);
+    } catch (error) {
+      // Pass any errors to next()
       next(error);
     }
   }
