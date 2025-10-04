@@ -1,5 +1,6 @@
 // Test setup file
-const { jest } = require('@jest/globals');
+// you don't need to declare jest here, it's available globally already
+// const { jest } = require('@jest/globals');
 
 jest.setTimeout(10000);
 

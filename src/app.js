@@ -9,6 +9,7 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const cors = require('cors');
 
 // TODO: Implement stats tracking object
 let stats = {
@@ -21,6 +22,14 @@ let stats = {
 app.use(helmet());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(cors());
+// app.options('*', (req, res) => {
+//   res.set({
+//     'Access-Control-Allow-Origin': [process.env.ALLOWED_ORIGINS],
+//     'Access-Control-Allow-Headers': 'Content-Type',
+//     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
+//   })
+// })
 
 // Rate limiting
 const limiter = rateLimit({
@@ -35,6 +44,12 @@ app.use(loggingMiddleware);
 
 // TODO: Add middleware to track request statistics
 // Hint: Increment totalRequests and track endpoint usage
+app.use((req, res, next) => {
+  stats.totalRequests++;
+  const endpoint = `${req.method} ${req.path}`;
+  stats.endpointStats[endpoint] = (stats.endpointStats[endpoint] || 0) + 1;
+  next();
+});
 
 // Routes
 app.use('/api/comics', comicsRouter);
@@ -50,7 +65,11 @@ app.get('/api/health', (req, res) => {
 // TODO: Implement /api/stats endpoint
 app.get('/api/stats', (req, res) => {
   // Return stats object with totalRequests, endpointStats, and uptime
-  res.status(501).json({ error: 'Not implemented' });
+  return res.json({
+    totalRequests: stats.totalRequests,
+    endpointStats: stats.endpointStats,
+    uptime: (Date.now() - stats.startTime) / 1000
+  });
 });
 
 // 404 handler for API routes
